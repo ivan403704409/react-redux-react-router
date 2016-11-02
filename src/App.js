@@ -5,6 +5,7 @@ import './App.css';
 import { connect } from 'react-redux'
 import { fetchUser, setUserName } from './redux/actions/user'
 
+import { getArticle } from './service/model/article.js'
 
 class App extends Component {
   
@@ -16,6 +17,7 @@ class App extends Component {
           <h2>React + Redux</h2>
         </div>
         {this.renderWelcome()}
+        {this.renderArticle()}
       </div>
     );
   }
@@ -24,11 +26,28 @@ class App extends Component {
   constructor(props){
     super(props)
     this.state = {
+      articles: [],
       login: false,
       name: '',
     }
   }
 
+  componentWillMount(){
+    this.fnGetArticle()
+  }
+
+  async fnGetArticle(){
+    let articles = await getArticle()
+    // getArticle().then(articles => {
+    //   this.setState({
+    //     articles
+    //   })
+    // })
+    console.log(111)
+    this.setState({
+      articles
+    })
+  }
 
   handleChange(){
     const name = this.refs.input.value
@@ -50,6 +69,14 @@ class App extends Component {
       name: '',
       login: false,
     })
+  }
+
+  renderArticle(){
+    return (
+      <ul>
+        {this.state.articles.map(data => <li>{data.title}</li>)}
+      </ul>
+    )
   }
 
   renderWelcome(){
